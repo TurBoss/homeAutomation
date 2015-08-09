@@ -2,13 +2,12 @@
 import json
 
 from django.shortcuts import render
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse, HttpResponse
 from django.db import transaction
 from controlPanel.models import Output
 
-
-# Create your views here.
-
+@ensure_csrf_cookie
 def control(request):
     return render(request, 'index.html')
 
