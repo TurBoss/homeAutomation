@@ -79,7 +79,7 @@ var Config = React.createClass({
                 out6: zoneName[6],
                 out7: zoneName[7]
             } };
-        console.log(data["outputs"]);
+
         $.ajax({
             url: "sendNameData",
             dataType: 'text',
