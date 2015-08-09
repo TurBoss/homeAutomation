@@ -295,7 +295,7 @@ var Outputs = React.createClass({
                 "div",
                 { className: "output", key: 13 * i },
                 React.createElement(
-                    "h1",
+                    "h2",
                     null,
                     zoneName
                 ),

@@ -18,7 +18,7 @@ body {
     margin: auto;
     background: url("../img/config.png") 0 0; }
   .panel .config {
-    width: 200px;
+    width: 150px;
     background: #989898;
     color: white;
     padding: 20px;
@@ -32,7 +32,7 @@ body {
       margin: 0;
       width: 85%;
       font-family: sans-serif;
-      font-size: 18px;
+      font-size: 14px;
       appearance: none;
       box-shadow: none;
       border-radius: none;
@@ -44,7 +44,7 @@ body {
       outline: none;
       border: solid 5px #c9c9c9; }
   .panel .output {
-    width: 200px;
+    width: 150px;
     background: #989898;
     color: white;
     padding: 20px;

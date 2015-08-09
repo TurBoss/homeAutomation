@@ -280,7 +280,7 @@ var Outputs = React.createClass({
             controls.push(
 
                 <div className="output" key={13*i}>
-                    <h1>{zoneName}</h1>
+                    <h2>{zoneName}</h2>
                     <div className={ledStatus}></div>
                     {button}
                 </div>
