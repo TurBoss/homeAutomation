@@ -50,12 +50,16 @@ var Config = React.createClass({
             success: (function (data) {
 
                 var zoneName = [];
+                var portName;
 
                 for (var property in data["zoneName"]) {
                     zoneName.push(data["zoneName"][property]);
                 }
 
+                portName = data["portName"];
+
                 this.setState({ zoneName: zoneName });
+                this.setState({ portName: portName });
             }).bind(this),
 
             error: (function (xhr, status, err) {
@@ -65,11 +69,12 @@ var Config = React.createClass({
         });
     },
 
-    sendStatus: function sendStatus(zoneName) {
+    sendStatus: function sendStatus(zoneName, portName) {
 
         clearInterval(this.timer);
 
-        var data = { outputs: {
+        var data = {
+            outputs: {
                 out0: zoneName[0],
                 out1: zoneName[1],
                 out2: zoneName[2],
@@ -78,7 +83,9 @@ var Config = React.createClass({
                 out5: zoneName[5],
                 out6: zoneName[6],
                 out7: zoneName[7]
-            } };
+            },
+            portName: portName
+        };
 
         $.ajax({
             url: "sendNameData",
@@ -86,11 +93,9 @@ var Config = React.createClass({
             type: 'POST',
             data: JSON.stringify(data),
             success: (function (data) {
-                for (var i = 0; i < this.state.numOuts; i++) {
-                    zoneName[i] = data["outputs"]["out" + i];
-                }
-                this.setState({ zoneName: zoneName });
+                console.log("OK");
             }).bind(this),
+
             error: (function (xhr, status, err) {
                 console.error("sendData", status, err.toString());
             }).bind(this)
@@ -104,22 +109,31 @@ var Config = React.createClass({
     },
 
     componentWillUnmount: function componentWillUnmount() {
-        this.sendStatus(this.state.zoneName);
+        this.sendStatus(this.state.zoneName, this.state.portName);
     },
 
     getInitialState: function getInitialState() {
 
         var zoneName = [];
+        var portName;
 
         return {
-            zoneName: zoneName
+            zoneName: zoneName,
+            portName: portName
         };
     },
 
     handleChange: function handleChange(index, event) {
-        var zoneName = this.state.zoneName;
-        zoneName[index] = event.target.value;
-        this.setState({ zoneName: zoneName });
+        if (index == "port") {
+            var portName = this.state.portName;
+            portName = event.target.value;
+            this.setState({ portName: portName });
+        } else {
+
+            var zoneName = this.state.zoneName;
+            zoneName[index] = event.target.value;
+            this.setState({ zoneName: zoneName });
+        }
     },
 
     render: function render() {
@@ -127,6 +141,7 @@ var Config = React.createClass({
         var numOuts = 8;
         var config = [];
         var zoneName = this.state.zoneName;
+        var portName = this.state.portName;
         var buttonName;
 
         for (var i = 0; i < numOuts; i++) {
@@ -144,6 +159,16 @@ var Config = React.createClass({
                 React.createElement("input", { type: "text", value: zoneName[i], onChange: this.handleChange.bind(this, i) })
             ));
         }
+        config.push(React.createElement(
+            "div",
+            { className: "config", key: "0123" },
+            React.createElement(
+                "h1",
+                null,
+                "Port"
+            ),
+            React.createElement("input", { type: "text", value: portName, onChange: this.handleChange.bind(this, "port") })
+        ));
         return React.createElement(
             "div",
             null,
@@ -184,7 +209,8 @@ var Outputs = React.createClass({
 
         clearInterval(this.timer);
 
-        var data = { outputs: {
+        var data = {
+            outputs: {
                 out0: outs[0],
                 out1: outs[1],
                 out2: outs[2],
@@ -193,7 +219,8 @@ var Outputs = React.createClass({
                 out5: outs[5],
                 out6: outs[6],
                 out7: outs[7]
-            } };
+            }
+        };
 
         $.ajax({
             url: "sendOutputData",
