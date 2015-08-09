@@ -135,7 +135,7 @@ var Config = React.createClass({
 
             config.push(React.createElement(
                 "div",
-                { className: "config" },
+                { className: "config", key: 13 * i },
                 React.createElement(
                     "h1",
                     null,
@@ -293,7 +293,7 @@ var Outputs = React.createClass({
 
             controls.push(React.createElement(
                 "div",
-                { className: "output" },
+                { className: "output", key: 13 * i },
                 React.createElement(
                     "h1",
                     null,

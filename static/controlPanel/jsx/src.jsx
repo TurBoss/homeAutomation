@@ -76,7 +76,7 @@ var Config = React.createClass({
             out6: zoneName[6],
             out7: zoneName[7]
         }};
-        
+
         $.ajax({
             url: "sendNameData",
             dataType: 'text',
@@ -131,7 +131,7 @@ var Config = React.createClass({
             buttonName = i + 1;
 
             config.push(
-                <div className="config">
+                <div className="config" key ={13*i}>
                     <h1>{buttonName}</h1>
                     <input type="text" value={zoneName[i]} onChange={this.handleChange.bind(this, i)} />
                 </div>
@@ -279,7 +279,7 @@ var Outputs = React.createClass({
 
             controls.push(
 
-                <div className="output">
+                <div className="output" key={13*i}>
                     <h1>{zoneName}</h1>
                     <div className={ledStatus}></div>
                     {button}
