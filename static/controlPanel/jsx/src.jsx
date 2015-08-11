@@ -92,7 +92,6 @@ var Config = React.createClass({
             data:  JSON.stringify(data),
             success: function(data) {
                 console.log("OK")
-
             }.bind(this),
 
             error: function(xhr, status, err) {

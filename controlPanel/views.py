@@ -53,18 +53,21 @@ def sendOutputData(request):
             with transaction.atomic():
 
                 i = 1
-
+                serialOutput = ""
                 for outs in data["outputs"]:
 
                     out = Output.objects.get(id=i)
                     out.output_state =  data["outputs"][outs]
                     out.save()
+
+                    serialOutput += str(out.output_state)
+
                     i += 1
 
             port = Port.objects.get(id=1)
-
             try:
                 ser = serial.Serial(port.port_name)
+                ser.write(serialOutput)
                 ser.close()
             except:
                 print("No Serial Port")
