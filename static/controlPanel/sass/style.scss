@@ -10,7 +10,7 @@ body {
     //width: 93%;
     display:table;
     background: rgba(0, 0, 0, 0);
-    color: #adadad;
+    color: Green;
     padding: 20px;
     text-align: right;
     border: 1px solid;
@@ -32,7 +32,7 @@ body {
         width: 150px;
         background: rgba(0, 0, 0, 0);
         border: 1px solid;
-        color: #adadad;
+        //color: #adadad;
         padding: 20px;
         text-align: center;
         float:left;
@@ -42,6 +42,8 @@ body {
 
         input[type="text"] {
             display: block;
+            background: rgba(0, 0, 0, 0);
+            color: Green;
             margin: 0;
             width: 85%;
             font-family: sans-serif;
@@ -50,20 +52,20 @@ body {
             box-shadow: none;
             border-radius: none;
             padding: 10px;
-            border: solid 5px #6b6b6b;
+            border: solid 5px Green;
             transition: border 0.3s;
             //box-shadow: 0px 5px 5px darken(#4e4e4e, 20%);
         }
         input[type="text"]:focus {
             outline: none;
-            border: solid 5px #c9c9c9;
+            border: solid 5px #00ff00;
         }
     }
     .output {
         width: 150px;
         background: rgba(0, 0, 0, 0);
         border: 1px solid;
-        color: #adadad;
+        //color: #adadad;
         padding: 20px;
         text-align: center;
         float:left;
@@ -94,7 +96,7 @@ body {
         }
 
         button.enable {
-            background: #ffffff;
+            background: #00ff00;
             border: 0;
             //box-shadow: 0px 5px 5px darken(#4e4e4e, 20%);
             padding: 20px;
@@ -108,7 +110,7 @@ body {
         }
 
         button.disable {
-            background: #c7c7c7;
+            background: Green;
             border: 0;
             //box-shadow: 0px 5px 5px darken(#4e4e4e, 20%);
             padding: 20px;
