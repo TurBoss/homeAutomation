@@ -1,14 +1,17 @@
 body {
-  background: #5d829a;
-  padding: 20px; }
+  padding: 20px;
+  background: -webkit-gradient(linear, left top, left bottom, from(#363636), to(#1d1d1d));
+  /* for webkit browsers */
+  background: -moz-linear-gradient(top, #363636, #1d1d1d);
+  /* for firefox 3.6+ */ }
 
 .panel {
   display: table;
-  background: #c2c2c2;
-  color: white;
+  background: transparent;
+  color: #adadad;
   padding: 20px;
   text-align: right;
-  box-shadow: 0px 5px 5px #1b1b1b; }
+  border: 1px solid; }
   .panel .configButton {
     position: absolute;
     right: 64px;
@@ -19,14 +22,14 @@ body {
     background: url("../img/config.png") 0 0; }
   .panel .config {
     width: 150px;
-    background: #989898;
-    color: white;
+    background: transparent;
+    border: 1px solid;
+    color: #adadad;
     padding: 20px;
     text-align: center;
     float: left;
     margin: 10px;
-    margin-top: 100px;
-    box-shadow: 0px 5px 5px #1b1b1b; }
+    margin-top: 100px; }
     .panel .config input[type="text"] {
       display: block;
       margin: 0;
@@ -38,21 +41,20 @@ body {
       border-radius: none;
       padding: 10px;
       border: solid 5px #6b6b6b;
-      transition: border 0.3s;
-      box-shadow: 0px 5px 5px #1b1b1b; }
+      transition: border 0.3s; }
     .panel .config input[type="text"]:focus {
       outline: none;
       border: solid 5px #c9c9c9; }
   .panel .output {
     width: 150px;
-    background: #989898;
-    color: white;
+    background: transparent;
+    border: 1px solid;
+    color: #adadad;
     padding: 20px;
     text-align: center;
     float: left;
     margin: 10px;
-    margin-top: 100px;
-    box-shadow: 0px 5px 5px #1b1b1b; }
+    margin-top: 100px; }
     .panel .output .redCircle {
       width: 50px;
       height: 50px;
@@ -60,8 +62,7 @@ body {
       -moz-border-radius: 25px;
       border-radius: 25px;
       background-color: #ff0000;
-      margin: auto;
-      box-shadow: 0px 5px 5px #1b1b1b; }
+      margin: auto; }
     .panel .output .greenCircle {
       width: 50px;
       height: 50px;
@@ -69,12 +70,10 @@ body {
       -moz-border-radius: 25px;
       border-radius: 25px;
       background-color: #00ff00;
-      margin: auto;
-      box-shadow: 0px 5px 5px #1b1b1b; }
+      margin: auto; }
     .panel .output button.enable {
       background: #ffffff;
       border: 0;
-      box-shadow: 0px 5px 5px #1b1b1b;
       padding: 20px;
       margin: auto;
       margin-top: 20px;
@@ -86,7 +85,6 @@ body {
     .panel .output button.disable {
       background: #c7c7c7;
       border: 0;
-      box-shadow: 0px 5px 5px #1b1b1b;
       padding: 20px;
       margin: auto;
       margin-top: 20px;
