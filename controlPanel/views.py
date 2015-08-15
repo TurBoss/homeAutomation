@@ -23,6 +23,8 @@ def getData(request):
 
             data = Output.objects.all()
 
+            numOutputs = Output.objects.all().count()
+
             i = 0
 
             for output in data:
@@ -35,6 +37,7 @@ def getData(request):
             port = Port.objects.get(id=1)
 
             output_data["outputs"] = output_state
+            output_data["numOutputs"] = numOutputs
             output_data["zoneName"] = output_name
             output_data["portName"] = port.port_name
 

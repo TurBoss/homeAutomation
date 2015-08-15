@@ -51,15 +51,18 @@ var Config = React.createClass({
 
                 var zoneName = [];
                 var portName;
+                var numZones;
 
                 for (var property in data["zoneName"]) {
                     zoneName.push(data["zoneName"][property]);
                 }
 
                 portName = data["portName"];
+                numZones = data["numOutputs"];
 
                 this.setState({ zoneName: zoneName });
                 this.setState({ portName: portName });
+                this.setState({ numZones: numZones });
             }).bind(this),
 
             error: (function (xhr, status, err) {
@@ -70,8 +73,6 @@ var Config = React.createClass({
     },
 
     sendStatus: function sendStatus(zoneName, portName) {
-
-        clearInterval(this.timer);
 
         var data = {
             outputs: {
@@ -100,8 +101,6 @@ var Config = React.createClass({
                 console.error("sendData", status, err.toString());
             }).bind(this)
         });
-
-        this.timer = setInterval(this.tick, 5000);
     },
 
     componentDidMount: function componentDidMount() {
@@ -116,10 +115,12 @@ var Config = React.createClass({
 
         var zoneName = [];
         var portName;
+        var numZones;
 
         return {
             zoneName: zoneName,
-            portName: portName
+            portName: portName,
+            numZones: numZones
         };
     },
 
@@ -138,13 +139,13 @@ var Config = React.createClass({
 
     render: function render() {
 
-        var numOuts = 8;
         var config = [];
         var zoneName = this.state.zoneName;
         var portName = this.state.portName;
+        var numZones = this.state.numZones;
         var buttonName;
 
-        for (var i = 0; i < numOuts; i++) {
+        for (var i = 0; i < numZones; i++) {
 
             buttonName = i + 1;
 
@@ -188,16 +189,22 @@ var Outputs = React.createClass({
             success: (function (data) {
 
                 var outs = [];
+                var zoneName = [];
+                var numZones;
+
                 for (var property in data["outputs"]) {
                     outs.push(data["outputs"][property]);
                 }
-                this.setState({ outs: outs });
 
-                var zoneName = [];
                 for (var property in data["zoneName"]) {
                     zoneName.push(data["zoneName"][property]);
                 }
+
+                numZones = data["numOutputs"];
+
+                this.setState({ outs: outs });
                 this.setState({ zoneName: zoneName });
+                this.setState({ numZones: numZones });
             }).bind(this),
             error: (function (xhr, status, err) {
                 console.error("getData", status, err.toString());
@@ -277,19 +284,21 @@ var Outputs = React.createClass({
     getInitialState: function getInitialState() {
         var zoneName = [];
         var outs = [];
-        var numOuts = 8;
-        for (var i = 0; i < numOuts; i++) {
+        var numZones;
+
+        for (var i = 0; i < numZones; i++) {
             outs.push(0);
         }
         return {
             outs: outs,
             zoneName: zoneName,
-            numOuts: numOuts
+            numZones: numZones
         };
     },
 
     render: function render() {
-        var numOuts = 8;
+
+        var numZones = this.state.numZones;
         var controls = [];
 
         var ledStatus;
@@ -297,7 +306,7 @@ var Outputs = React.createClass({
         var buttonName;
         var zoneName;
 
-        for (var i = 0; i < numOuts; i++) {
+        for (var i = 0; i < numZones; i++) {
 
             buttonName = i + 1;
             zoneName = this.state.zoneName[i];
@@ -330,6 +339,7 @@ var Outputs = React.createClass({
                 button
             ));
         }
+
         return React.createElement(
             "div",
             null,
