@@ -5,8 +5,8 @@ from django.contrib import admin
 from .models import Output, Port
 
 class OutputAdmin(admin.ModelAdmin):
-    fields = ['output_name', 'output_state']
-    list_display = ('output_name', 'output_state')
+    fields = ['output_name', 'output_state', 'output_server']
+    list_display = ('output_name', 'output_state', 'output_server')
 
 class PortAdmin(admin.ModelAdmin):
     fields = ['port_name']

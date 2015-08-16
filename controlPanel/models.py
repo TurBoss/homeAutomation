@@ -8,6 +8,7 @@ class Output(models.Model):
 
     output_name = models.CharField(max_length=200)
     output_state = models.IntegerField(default=0)
+    output_server = models.CharField(max_length=200)
 
 class Port(models.Model):
     port_name = models.CharField(max_length=200)

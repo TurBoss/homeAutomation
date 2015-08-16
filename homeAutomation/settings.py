@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pipeline',
     'controlPanel'
 ]
 
@@ -120,7 +121,59 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
+PIPELINE_ENABLED = True
+
+PIPELINE_COMPILERS = (
+    'react.utils.pipeline.JSXCompiler',
+    'pipeline.compilers.sass.SASSCompiler',
+    'pipeline.compilers.es6.ES6Compiler',
+)
+
+PIPELINE_JS = {
+    'main': {
+        'source_filenames': (
+            'controlPanel/jsx/main.jsx',
+        ),
+        'output_filename': 'controlPanel/js/main.js',
+    },
+    'jquery': {
+        'source_filenames': (
+            'controlPanel/jquery/jquery.js',
+        ),
+        'output_filename': 'controlPanel/lib/jquery.js',
+    },
+    'ajax-setup':{
+        'source_filenames': (
+            'controlPanel/ajax-setup/ajax-setup.js',
+        ),
+        'output_filename':'controlPanel/lib/ajax-setup.js',
+    },
+    'react': {
+        'source_filenames':(
+            'controlPanel/react/react.js',
+        ),
+        'output_filename': 'controlPanel/lib/react.js'
+    }
+
+}
+
+PIPELINE_CSS = {
+    'main': {
+        'source_filenames': (
+            'controlPanel/sass/style.scss',
+        ),
+        'output_filename': 'controlPanel/css/main.css',
+    }
+}
