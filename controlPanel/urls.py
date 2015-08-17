@@ -7,4 +7,6 @@ urlpatterns = [
     url(r'^getData$', views.getData, name='getData'),
     url(r'^sendOutputData$', views.sendOutputData, name='sendOutputData'),
     url(r'^sendNameData$', views.sendNameData, name='sendNameData'),
+    url(r'^turn$', views.turn, name='turn'),
+
 ]

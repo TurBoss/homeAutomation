@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 import json
-import serial
+import requests
 
 from django.shortcuts import render
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.http import JsonResponse, HttpResponse
 from django.db import transaction
 from controlPanel.models import Output, Port
@@ -56,7 +56,7 @@ def sendOutputData(request):
             with transaction.atomic():
 
                 i = 1
-                serialOutput = ""
+
                 for outs in data["outputs"]:
 
                     out = Output.objects.get(id=i)
@@ -95,3 +95,52 @@ def sendNameData(request):
             return HttpResponse("OK")
     else:
         return HttpResponse("NONONONONONONONO")
+
+@csrf_exempt
+def turn(request):
+
+    if checkValidIP(request):
+
+        if request.method == 'POST':
+
+            data = json.loads(request.body)
+
+            output = data["out"]
+            state = data["state"]
+
+            with transaction.atomic():
+
+                out = Output.objects.get(id=output)
+                out.output_state = state
+                out.save()
+
+
+    return HttpResponse("OK")
+
+def checkValidIP(request):
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        print("HTTP_X_FORWARDED_FOR")
+        remoteIP = x_forwarded_for.split(',')[0]
+    else:
+        print("REMOTE_ADDR")
+        remoteIP = request.META.get('REMOTE_ADDR')
+
+
+    data = Output.objects.all()
+
+    serverList = []
+
+
+    for server in data:
+        serverIP = server.output_server.split(':')[0]
+        serverList.append(serverIP)
+
+    print(remoteIP)
+    print(serverList)
+
+    if remoteIP in serverList:
+        return(True)
+    else:
+        return(False)
