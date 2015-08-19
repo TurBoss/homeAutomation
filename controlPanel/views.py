@@ -131,14 +131,17 @@ def turn(request):
         print("REMOTE_ADDR")
         remoteIP = request.META.get('REMOTE_ADDR')
 
-    if checkValidIP(remoteIP):
-
+    if validIP(remoteIP):
+        print("Valid IP")
         if request.method == 'POST':
+
+            print("%s %s" % (request.method, request.body))
 
             data = json.loads(request.body)
 
             output = data["out"]
             state = data["state"]
+            print("output= %s state= %s" % (output,state))
 
             with transaction.atomic():
 
@@ -146,17 +149,16 @@ def turn(request):
                 out.output_state = state
                 out.save()
 
-
             return HttpResponse("OK")
     else:
         return HttpResponseForbidden("NONONONONONONONO")
 
 
-def checkValidIP(ip):
+def validIP(ip):
 
     data = Output.objects.all()
 
-    serverList = []
+    serverList = [u'127.0.0.1', u'192.168.0.128']
 
     for server in data:
         serverIP = server.output_server.split(':')[0]
