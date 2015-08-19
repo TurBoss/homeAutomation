@@ -4,9 +4,9 @@ import requests
 
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseForbidden
 from django.db import transaction
-from controlPanel.models import Output, Port
+from controlPanel.models import Output
 
 @ensure_csrf_cookie
 def control(request):
@@ -45,30 +45,52 @@ def getData(request):
             return HttpResponse(response.content)
 
     else:
-        return HttpResponse("NONONONONONONONO")
+        return HttpResponseForbidden("NONONONONONONONO")
 
 def sendOutputData(request):
+
     if request.is_ajax():
 
         if request.method == 'POST':
+
             data = json.loads(request.body)
 
             with transaction.atomic():
 
-                i = 1
+                i = 0
 
                 for outs in data["outputs"]:
+
+                    i += 1
 
                     out = Output.objects.get(id=i)
                     out.output_state =  data["outputs"][outs]
                     out.save()
 
-                    i += 1
+
+            j = 0
+
+            for outs in data["outputs"]:
+
+                j += 1
+
+                out = Output.objects.get(id=j)
+                server = out.output_server
+                state = out.output_state
+
+                url = "http://%s" % server
+
+                try:
+                    r = requests.get(url, timeout=0.1)
+                except requests.exceptions.Timeout:
+                    print("Timeout error %s" % server)
+                except requests.exceptions.RequestException as e:
+                    print(e)
 
             response = JsonResponse(data)
             return HttpResponse(response.content)
     else:
-        return HttpResponse("NONONONONONONONO")
+        return HttpResponseForbidden("NONONONONONONONO")
 
 def sendNameData(request):
     if request.is_ajax():
@@ -94,12 +116,22 @@ def sendNameData(request):
 
             return HttpResponse("OK")
     else:
-        return HttpResponse("NONONONONONONONO")
+        return HttpResponseForbidden("NONONONONONONONO")
 
 @csrf_exempt
 def turn(request):
 
-    if checkValidIP(request):
+    remoteIP = ""
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        print("HTTP_X_FORWARDED_FOR")
+        remoteIP = x_forwarded_for.split(',')[0]
+    else:
+        print("REMOTE_ADDR")
+        remoteIP = request.META.get('REMOTE_ADDR')
+
+    if checkValidIP(remoteIP):
 
         if request.method == 'POST':
 
@@ -115,32 +147,25 @@ def turn(request):
                 out.save()
 
 
-    return HttpResponse("OK")
-
-def checkValidIP(request):
-
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        print("HTTP_X_FORWARDED_FOR")
-        remoteIP = x_forwarded_for.split(',')[0]
+            return HttpResponse("OK")
     else:
-        print("REMOTE_ADDR")
-        remoteIP = request.META.get('REMOTE_ADDR')
+        return HttpResponseForbidden("NONONONONONONONO")
 
+
+def checkValidIP(ip):
 
     data = Output.objects.all()
 
     serverList = []
 
-
     for server in data:
         serverIP = server.output_server.split(':')[0]
         serverList.append(serverIP)
 
-    print(remoteIP)
+    print(ip)
     print(serverList)
 
-    if remoteIP in serverList:
+    if ip in serverList:
         return(True)
     else:
         return(False)
