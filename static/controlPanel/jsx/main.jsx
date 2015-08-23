@@ -203,21 +203,16 @@ var Outputs = React.createClass({
         });
     },
 
-    sendStatus: function(){
+    sendStatus: function(out, index){
 
         clearInterval(this.timer);
 
-        var outs = this.state.outs;
+        var data = {};
+        var outs = [];
         var numZones = this.state.numZones;
 
-        var data = {
-            outputs: {}
-        };
-
-        for (var i = 0; i < numZones; i++){
-            data.outputs["out"+i] = outs[i];
-        }
-
+        data["state"] = out[index];
+        data["out"] = index + 1;
 
         $.ajax({
             url: "sendOutputData",
@@ -225,17 +220,16 @@ var Outputs = React.createClass({
             type: 'POST',
             data:  JSON.stringify(data),
             success: function(data) {
-                for (var i = 0; i < this.state.numOuts; i++){
+                for (var i = 0; i < numZones; i++){
                     outs[i] = data["outputs"]["out"+i];
                 }
-                this.setState({outs: outs});
+                this.setState({outs: outs})
+                this.timer = setInterval(this.tick, 5000);
             }.bind(this),
             error: function(xhr, status, err) {
                 console.error("sendData", status, err.toString());
             }.bind(this)
         });
-
-        this.timer = setInterval(this.tick, 5000);
     },
 
     componentDidMount: function(){
@@ -257,7 +251,7 @@ var Outputs = React.createClass({
         outs[index] = 1
 
         this.setState({outs: outs});
-        this.sendStatus(outs);
+        this.sendStatus(outs, index);
     },
 
     disableOut: function(index){
@@ -265,9 +259,8 @@ var Outputs = React.createClass({
         var outs = this.state.outs;
         outs[index] = 0;
 
-        this.sendStatus(outs);
-
         this.setState({outs: outs});
+        this.sendStatus(outs, index);
     },
 
     getInitialState: function(){

@@ -55,39 +55,46 @@ def sendOutputData(request):
 
             data = json.loads(request.body)
 
+            out_id = data["out"]
+            state = data["state"]
+
             with transaction.atomic():
 
-                i = 0
 
-                for outs in data["outputs"]:
-
-                    i += 1
-
-                    out = Output.objects.get(id=i)
-                    out.output_state =  data["outputs"][outs]
-                    out.save()
+                out = Output.objects.get(id=out_id)
+                out.output_state =  state
+                out.save()
 
 
-            j = 0
+            output_data = {}
+            output_state = {}
 
-            for outs in data["outputs"]:
+            data = Output.objects.all()
 
-                j += 1
+            i = 0
 
-                out = Output.objects.get(id=j)
-                server = out.output_server
-                state = out.output_state
+            for output in data:
 
-                url = "http://%s" % server
+                output_state["out%s"%i] = output.output_state
 
-                try:
-                    r = requests.get(url, timeout=0.1)
-                except requests.exceptions.Timeout:
-                    print("Timeout error %s" % server)
-                except requests.exceptions.RequestException as e:
-                    print(e)
+                i += 1
 
-            response = JsonResponse(data)
+            output_data["outputs"] = output_state
+
+            out = Output.objects.get(id=out_id)
+            server = out.output_server
+            state = out.output_state
+
+            url = "http://%s" % server
+
+            try:
+                r = requests.get(url, timeout=0.1)
+            except requests.exceptions.Timeout:
+                print("Timeout error %s" % server)
+            except requests.exceptions.RequestException as e:
+                print(e)
+
+            response = JsonResponse(output_data)
             return HttpResponse(response.content)
     else:
         return HttpResponseForbidden("NONONONONONONONO")
