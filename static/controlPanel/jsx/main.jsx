@@ -51,11 +51,11 @@ var Config = React.createClass({
                 var numZones;
 
                 for (var property in data["zoneName"]){
-                    zoneName.push(data["zoneName"][property])
+                    zoneName.push(data["zoneName"][property]);
                 }
 
                 for (var property in data["zoneServer"]){
-                    zoneServer.push(data["zoneServer"][property])
+                    zoneServer.push(data["zoneServer"][property]);
                 }
 
                 numZones = data["numOutputs"]
@@ -183,14 +183,14 @@ var Outputs = React.createClass({
                 var numZones;
 
                 for (var property in data["outputs"]){
-                    outs.push(data["outputs"][property])
+                    outs.push(data["outputs"][property]);
                 }
 
                 for (var property in data["zoneName"]){
-                    zoneName.push(data["zoneName"][property])
+                    zoneName.push(data["zoneName"][property]);
                 }
 
-                numZones = data["numOutputs"]
+                numZones = data["numOutputs"];
 
                 this.setState({outs: outs});
                 this.setState({zoneName: zoneName});
@@ -223,7 +223,9 @@ var Outputs = React.createClass({
                 for (var i = 0; i < numZones; i++){
                     outs[i] = data["outputs"]["out"+i];
                 }
-                this.setState({outs: outs})
+                this.setState({outs: outs});
+
+                clearInterval(this.timer);
                 this.timer = setInterval(this.tick, 5000);
             }.bind(this),
             error: function(xhr, status, err) {
@@ -247,8 +249,8 @@ var Outputs = React.createClass({
 
     enableOut: function(index){
 
-        var outs = this.state.outs
-        outs[index] = 1
+        var outs = this.state.outs;
+        outs[index] = 1;
 
         this.setState({outs: outs});
         this.sendStatus(outs, index);
@@ -269,7 +271,7 @@ var Outputs = React.createClass({
         var numZones;
 
         for (var i = 0; i < numZones; i++ ){
-            outs.push(0)
+            outs.push(0);
         }
         return {
             outs: outs,
@@ -280,8 +282,8 @@ var Outputs = React.createClass({
 
     render: function(){
 
-        var numZones = this.state.numZones
-        var controls = []
+        var numZones = this.state.numZones;
+        var controls = [];
 
         var ledStatus;
         var button;

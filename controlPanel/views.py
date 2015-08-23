@@ -60,7 +60,6 @@ def sendOutputData(request):
 
             with transaction.atomic():
 
-
                 out = Output.objects.get(id=out_id)
                 out.output_state =  state
                 out.save()
@@ -88,7 +87,7 @@ def sendOutputData(request):
             url = "http://%s" % server
 
             try:
-                r = requests.get(url, timeout=0.1)
+                r = requests.post(url, timeout=0.1)
             except requests.exceptions.Timeout:
                 print("Timeout error %s" % server)
             except requests.exceptions.RequestException as e:
