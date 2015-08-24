@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^sendOutputData$', views.sendOutputData, name='sendOutputData'),
     url(r'^sendNameData$', views.sendNameData, name='sendNameData'),
     url(r'^turn$', views.turn, name='turn'),
+    url(r'^systemTask$', views.systemTask, name='systemTask'),
 
 ]

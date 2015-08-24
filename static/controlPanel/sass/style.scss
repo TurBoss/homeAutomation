@@ -28,6 +28,28 @@ body {
 
     }
 
+    .shutdownButton {
+        position: absolute;
+        right: 128px;
+        border: 0;
+        width: 64px;
+        height: 64px;
+        margin: auto;
+        background: url('../img/config.png') 0 0;
+
+    }
+
+    .rebootButton {
+        position: absolute;
+        right: 192px;
+        border: 0;
+        width: 64px;
+        height: 64px;
+        margin: auto;
+        background: url('../img/config.png') 0 0;
+
+    }
+
     .config {
         width: 150px;
         background: rgba(0, 0, 0, 0);

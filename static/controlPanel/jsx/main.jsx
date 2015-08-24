@@ -4,6 +4,22 @@ var MainPanel = React.createClass({
         this.setState({page: page})
     },
 
+    system: function(func){
+        $.ajax({
+            url: "systemTask",
+            dataType: 'text',
+            type: 'POST',
+            data:  func,
+            success: function(data) {
+                console.log("OK");
+            }.bind(this),
+
+            error: function(xhr, status, err) {
+                console.error("system", status, err.toString());
+            }.bind(this)
+        });
+    },
+
     getInitialState: function(){
 
         var defaultPage = "control"; //Pages "control" "config"
@@ -19,12 +35,22 @@ var MainPanel = React.createClass({
         var configButton;
 
         if (this.state.page == "control") {
+
             configButton = <button className="configButton" type="button" onClick={this.changePage.bind(this, "config")}></button>
             display = <Outputs />
+
         }
         else if (this.state.page == "config") {
-            configButton = <button className="configButton" type="button" onClick={this.changePage.bind(this, "control")}></button>
+
+            configButton =
+                            <div>
+                                <button className="configButton" type="button" onClick={this.changePage.bind(this, "control")}></button>
+                                <button className="shutdownButton" type="button" onClick={this.system.bind(this, "shutdown")}></button>
+                                <button className="rebootButton" type="button" onClick={this.system.bind(this, "reboot")}></button>
+                            </div>
+
             display = <Config />
+
         }
 
         return (

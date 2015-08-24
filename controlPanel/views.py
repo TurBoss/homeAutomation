@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 import json
 import requests
+import subprocess
 
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
@@ -12,7 +13,30 @@ from controlPanel.models import Output
 def control(request):
     return render(request, 'index.html')
 
+def systemTask(request):
+
+    if request.is_ajax():
+
+        if request.method == 'POST':
+
+            if request.body == "shutdown":
+
+                command = "/usr/bin/sudo /sbin/shutdown -h now"
+
+            elif request.body == "reboot":
+
+                command = "/usr/bin/sudo /sbin/shutdown -r now"
+
+            process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+            output = process.communicate()[0]
+            print output
+
+            return HttpResponse("OK")
+    else:
+        return HttpResponseForbidden("NONONONONONONONO")
+
 def getData(request):
+
     if request.is_ajax():
 
         if request.method == 'GET':
