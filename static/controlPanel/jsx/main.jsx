@@ -44,7 +44,7 @@ var MainPanel = React.createClass({
 
             configButton =
                             <div>
-                                <button className="configButton" type="button" onClick={this.changePage.bind(this, "control")}></button>
+                                <button className="applyButton" type="button" onClick={this.changePage.bind(this, "control")}></button>
                                 <button className="shutdownButton" type="button" onClick={this.system.bind(this, "shutdown")}></button>
                                 <button className="rebootButton" type="button" onClick={this.system.bind(this, "reboot")}></button>
                             </div>

@@ -188,7 +188,7 @@ def validIP(ip):
 
     data = Output.objects.all()
 
-    serverList = [u'127.0.0.1', u'192.168.0.128']
+    serverList = []
 
     for server in data:
         serverIP = server.output_server.split(':')[0]
