@@ -162,7 +162,8 @@ PIPELINE_JS = {
     },
     'react': {
         'source_filenames':(
-            'controlPanel/react/react.js',
+            'controlPanel/react/react.min.js',
+            'controlPanel/react/react-with-addons.min.js',
         ),
         'output_filename': 'controlPanel/lib/react.js'
     }

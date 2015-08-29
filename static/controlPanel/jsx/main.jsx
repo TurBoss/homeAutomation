@@ -1,3 +1,5 @@
+var panelElement = document.getElementById('panel');
+
 var MainPanel = React.createClass({
 
     changePage: function(page){
@@ -25,24 +27,24 @@ var MainPanel = React.createClass({
         var defaultPage = "control"; //Pages "control" "config"
 
         return {
-            page: defaultPage
+            page: defaultPage,
         };
     },
 
     render: function(){
 
         var display;
-        var configButton;
+        var configButtons;
 
         if (this.state.page == "control") {
 
-            configButton = <button className="configButton" type="button" onClick={this.changePage.bind(this, "config")}></button>
+            configButtons = <button className="configButton" type="button" onClick={this.changePage.bind(this, "config")}></button>
             display = <Outputs />
 
         }
         else if (this.state.page == "config") {
 
-            configButton =
+            configButtons =
                             <div>
                                 <button className="applyButton" type="button" onClick={this.changePage.bind(this, "control")}></button>
                                 <button className="shutdownButton" type="button" onClick={this.system.bind(this, "shutdown")}></button>
@@ -55,7 +57,7 @@ var MainPanel = React.createClass({
 
         return (
             <div className="panel">
-                {configButton}
+                {configButtons}
                 {display}
             </div>
         );
@@ -348,7 +350,4 @@ var Outputs = React.createClass({
     }
 });
 
-React.render(
-    <MainPanel/>,
-    document.getElementById('panel')
-);
+React.render(<MainPanel/>, panelElement);
