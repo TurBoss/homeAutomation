@@ -98,7 +98,7 @@ def sendOutputData(request):
 
             for output in data:
 
-                output_state["out%s"%i] = output.output_state
+                output_state["out%s" % i] = output.output_state
 
                 i += 1
 
@@ -108,7 +108,12 @@ def sendOutputData(request):
             server = out.output_server
             state = out.output_state
 
-            url = "http://%s" % server
+            print(state)
+
+            if state == 1:
+                url = "http://%s/ON" % server
+            else:
+                url = "http://%s/OFF" % server
 
             try:
                 r = requests.post(url, timeout=0.1)
@@ -179,7 +184,7 @@ def turn(request):
                 out.output_state = state
                 out.save()
 
-            return HttpResponse("OK")
+        return HttpResponse("OK")
     else:
         return HttpResponseForbidden("NONONONONONONONO")
 
@@ -188,7 +193,7 @@ def validIP(ip):
 
     data = Output.objects.all()
 
-    serverList = []
+    serverList = ["192.168.0.113"]
 
     for server in data:
         serverIP = server.output_server.split(':')[0]
