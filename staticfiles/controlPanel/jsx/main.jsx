@@ -1,7 +1,25 @@
+var panelElement = document.getElementById('panel');
+
 var MainPanel = React.createClass({
 
     changePage: function(page){
         this.setState({page: page})
+    },
+
+    system: function(func){
+        $.ajax({
+            url: "systemTask",
+            dataType: 'text',
+            type: 'POST',
+            data:  func,
+            success: function(data) {
+                console.log("OK");
+            }.bind(this),
+
+            error: function(xhr, status, err) {
+                console.error("system", status, err.toString());
+            }.bind(this)
+        });
     },
 
     getInitialState: function(){
@@ -9,27 +27,37 @@ var MainPanel = React.createClass({
         var defaultPage = "control"; //Pages "control" "config"
 
         return {
-            page: defaultPage
+            page: defaultPage,
         };
     },
 
     render: function(){
 
         var display;
-        var configButton;
+        var configButtons;
 
         if (this.state.page == "control") {
-            configButton = <button className="configButton" type="button" onClick={this.changePage.bind(this, "config")}></button>
+
+            configButtons = <button className="configButton" type="button" onClick={this.changePage.bind(this, "config")}></button>
             display = <Outputs />
+
         }
         else if (this.state.page == "config") {
-            configButton = <button className="configButton" type="button" onClick={this.changePage.bind(this, "control")}></button>
+
+            configButtons =
+                            <div>
+                                <button className="applyButton" type="button" onClick={this.changePage.bind(this, "control")}></button>
+                                <button className="shutdownButton" type="button" onClick={this.system.bind(this, "shutdown")}></button>
+                                <button className="rebootButton" type="button" onClick={this.system.bind(this, "reboot")}></button>
+                            </div>
+
             display = <Config />
+
         }
 
         return (
             <div className="panel">
-                {configButton}
+                {configButtons}
                 {display}
             </div>
         );
@@ -51,11 +79,11 @@ var Config = React.createClass({
                 var numZones;
 
                 for (var property in data["zoneName"]){
-                    zoneName.push(data["zoneName"][property])
+                    zoneName.push(data["zoneName"][property]);
                 }
 
                 for (var property in data["zoneServer"]){
-                    zoneServer.push(data["zoneServer"][property])
+                    zoneServer.push(data["zoneServer"][property]);
                 }
 
                 numZones = data["numOutputs"]
@@ -183,14 +211,14 @@ var Outputs = React.createClass({
                 var numZones;
 
                 for (var property in data["outputs"]){
-                    outs.push(data["outputs"][property])
+                    outs.push(data["outputs"][property]);
                 }
 
                 for (var property in data["zoneName"]){
-                    zoneName.push(data["zoneName"][property])
+                    zoneName.push(data["zoneName"][property]);
                 }
 
-                numZones = data["numOutputs"]
+                numZones = data["numOutputs"];
 
                 this.setState({outs: outs});
                 this.setState({zoneName: zoneName});
@@ -224,13 +252,14 @@ var Outputs = React.createClass({
                     outs[i] = data["outputs"]["out"+i];
                 }
                 this.setState({outs: outs});
+
+                clearInterval(this.timer);
+                this.timer = setInterval(this.tick, 5000);
             }.bind(this),
             error: function(xhr, status, err) {
                 console.error("sendData", status, err.toString());
             }.bind(this)
         });
-
-        this.timer = setInterval(this.tick, 5000);
     },
 
     componentDidMount: function(){
@@ -248,8 +277,8 @@ var Outputs = React.createClass({
 
     enableOut: function(index){
 
-        var outs = this.state.outs
-        outs[index] = 1
+        var outs = this.state.outs;
+        outs[index] = 1;
 
         this.setState({outs: outs});
         this.sendStatus(outs, index);
@@ -270,7 +299,7 @@ var Outputs = React.createClass({
         var numZones;
 
         for (var i = 0; i < numZones; i++ ){
-            outs.push(0)
+            outs.push(0);
         }
         return {
             outs: outs,
@@ -281,8 +310,8 @@ var Outputs = React.createClass({
 
     render: function(){
 
-        var numZones = this.state.numZones
-        var controls = []
+        var numZones = this.state.numZones;
+        var controls = [];
 
         var ledStatus;
         var button;
@@ -321,7 +350,4 @@ var Outputs = React.createClass({
     }
 });
 
-React.render(
-    <MainPanel/>,
-    document.getElementById('panel')
-);
+React.render(<MainPanel/>, panelElement);

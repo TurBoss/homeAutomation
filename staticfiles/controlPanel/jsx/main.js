@@ -1,7 +1,25 @@
+var panelElement = document.getElementById('panel');
+
 var MainPanel = React.createClass({displayName: 'MainPanel',
 
     changePage: function(page){
         this.setState({page: page})
+    },
+
+    system: function(func){
+        $.ajax({
+            url: "systemTask",
+            dataType: 'text',
+            type: 'POST',
+            data:  func,
+            success: function(data) {
+                console.log("OK");
+            }.bind(this),
+
+            error: function(xhr, status, err) {
+                console.error("system", status, err.toString());
+            }.bind(this)
+        });
     },
 
     getInitialState: function(){
@@ -9,27 +27,37 @@ var MainPanel = React.createClass({displayName: 'MainPanel',
         var defaultPage = "control"; //Pages "control" "config"
 
         return {
-            page: defaultPage
+            page: defaultPage,
         };
     },
 
     render: function(){
 
         var display;
-        var configButton;
+        var configButtons;
 
         if (this.state.page == "control") {
-            configButton = React.createElement("button", {className: "configButton", type: "button", onClick: this.changePage.bind(this, "config")})
+
+            configButtons = React.createElement("button", {className: "configButton", type: "button", onClick: this.changePage.bind(this, "config")})
             display = React.createElement(Outputs, null)
+
         }
         else if (this.state.page == "config") {
-            configButton = React.createElement("button", {className: "configButton", type: "button", onClick: this.changePage.bind(this, "control")})
+
+            configButtons =
+                            React.createElement("div", null, 
+                                React.createElement("button", {className: "applyButton", type: "button", onClick: this.changePage.bind(this, "control")}), 
+                                React.createElement("button", {className: "shutdownButton", type: "button", onClick: this.system.bind(this, "shutdown")}), 
+                                React.createElement("button", {className: "rebootButton", type: "button", onClick: this.system.bind(this, "reboot")})
+                            )
+
             display = React.createElement(Config, null)
+
         }
 
         return (
             React.createElement("div", {className: "panel"}, 
-                configButton, 
+                configButtons, 
                 display
             )
         );
@@ -51,11 +79,11 @@ var Config = React.createClass({displayName: 'Config',
                 var numZones;
 
                 for (var property in data["zoneName"]){
-                    zoneName.push(data["zoneName"][property])
+                    zoneName.push(data["zoneName"][property]);
                 }
 
                 for (var property in data["zoneServer"]){
-                    zoneServer.push(data["zoneServer"][property])
+                    zoneServer.push(data["zoneServer"][property]);
                 }
 
                 numZones = data["numOutputs"]
@@ -183,14 +211,14 @@ var Outputs = React.createClass({displayName: 'Outputs',
                 var numZones;
 
                 for (var property in data["outputs"]){
-                    outs.push(data["outputs"][property])
+                    outs.push(data["outputs"][property]);
                 }
 
                 for (var property in data["zoneName"]){
-                    zoneName.push(data["zoneName"][property])
+                    zoneName.push(data["zoneName"][property]);
                 }
 
-                numZones = data["numOutputs"]
+                numZones = data["numOutputs"];
 
                 this.setState({outs: outs});
                 this.setState({zoneName: zoneName});
@@ -224,13 +252,14 @@ var Outputs = React.createClass({displayName: 'Outputs',
                     outs[i] = data["outputs"]["out"+i];
                 }
                 this.setState({outs: outs});
+
+                clearInterval(this.timer);
+                this.timer = setInterval(this.tick, 5000);
             }.bind(this),
             error: function(xhr, status, err) {
                 console.error("sendData", status, err.toString());
             }.bind(this)
         });
-
-        this.timer = setInterval(this.tick, 5000);
     },
 
     componentDidMount: function(){
@@ -248,8 +277,8 @@ var Outputs = React.createClass({displayName: 'Outputs',
 
     enableOut: function(index){
 
-        var outs = this.state.outs
-        outs[index] = 1
+        var outs = this.state.outs;
+        outs[index] = 1;
 
         this.setState({outs: outs});
         this.sendStatus(outs, index);
@@ -270,7 +299,7 @@ var Outputs = React.createClass({displayName: 'Outputs',
         var numZones;
 
         for (var i = 0; i < numZones; i++ ){
-            outs.push(0)
+            outs.push(0);
         }
         return {
             outs: outs,
@@ -281,8 +310,8 @@ var Outputs = React.createClass({displayName: 'Outputs',
 
     render: function(){
 
-        var numZones = this.state.numZones
-        var controls = []
+        var numZones = this.state.numZones;
+        var controls = [];
 
         var ledStatus;
         var button;
@@ -321,7 +350,4 @@ var Outputs = React.createClass({displayName: 'Outputs',
     }
 });
 
-React.render(
-    React.createElement(MainPanel, null),
-    document.getElementById('panel')
-);
+React.render(React.createElement(MainPanel, null), panelElement);
